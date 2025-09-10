@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Find Your Channel ID</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #000; color: #fff; }
+        .container { max-width: 600px; margin: 0 auto; }
+        input { padding: 10px; width: 100%; margin: 10px 0; background: #333; color: #fff; border: 1px solid #555; }
+        button { padding: 10px 20px; background: #fff; color: #000; border: none; cursor: pointer; }
+        .result { margin: 20px 0; padding: 15px; background: #111; border: 1px solid #333; }
+        .error { color: #ff6b6b; }
+        .success { color: #51cf66; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Find Your Feroz Moto Channel ID</h1>
+        <p>Enter your YouTube channel URL or username to find the correct Channel ID:</p>
+        
+        <input type="text" id="channelInput" placeholder="https://www.youtube.com/@ferozmoto or @ferozmoto" value="https://www.youtube.com/@ferozmoto">
+        <button onclick="findChannel()">Find Channel ID</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script>
+        const API_KEY = 'AIzaSyBddDXxvd6FvBC9tytve2LGzNf8tOVssvA';
+        
+        function findChannel() {
+            const input = document.getElementById('channelInput').value;
+            const resultDiv = document.getElementById('result');
+            
+            resultDiv.innerHTML = '<p>Searching...</p>';
+            
+            gapi.load('client', () => {
+                gapi.client.init({
+                    'apiKey': API_KEY,
+                    'discoveryDocs': ['https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest']
+                }).then(() => {
+                    searchChannel(input);
+                });
+            });
+        }
+        
+        async function searchChannel(input) {
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                // Extract username from URL if provided
+                let username = input;
+                if (input.includes('@')) {
+                    username = input.split('@')[1].split('/')[0];
+                } else if (input.includes('youtube.com/')) {
+                    const match = input.match(/@([^/?]+)/);
+                    if (match) username = match[1];
+                }
+                
+                resultDiv.innerHTML = `<p>Searching for: ${username}</p>`;
+                
+                // Try to find channel by username
+                const response = await gapi.client.youtube.channels.list({
+                    part: 'snippet,contentDetails',
+                    forUsername: username
+                });
+                
+                if (response.result.items && response.result.items.length > 0) {
+                    const channel = response.result.items[0];
+                    const channelId = channel.id;
+                    const channelTitle = channel.snippet.title;
+                    const uploadsPlaylistId = channel.contentDetails.relatedPlaylists.uploads;
+                    
+                    resultDiv.innerHTML = `
+                        <div class="success">
+                            <h3>✅ Channel Found!</h3>
+                            <p><strong>Channel Name:</strong> ${channelTitle}</p>
+                            <p><strong>Channel ID:</strong> ${channelId}</p>
+                            <p><strong>Uploads Playlist ID:</strong> ${uploadsPlaylistId}</p>
+                            <p><strong>Copy this Channel ID:</strong> <code>${channelId}</code></p>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="error">
+                            <h3>❌ Channel Not Found</h3>
+                            <p>Could not find channel with username: ${username}</p>
+                            <p>Try these alternatives:</p>
+                            <ul>
+                                <li>Make sure the channel is public</li>
+                                <li>Try the full URL: https://www.youtube.com/@ferozmoto</li>
+                                <li>Check if the username is exactly "ferozmoto"</li>
+                            </ul>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="error">
+                        <h3>❌ Error</h3>
+                        <p>Error: ${error.message}</p>
+                        <p>This might be due to:</p>
+                        <ul>
+                            <li>API quota exceeded (try again in a few minutes)</li>
+                            <li>Invalid API key</li>
+                            <li>Channel not found</li>
+                        </ul>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

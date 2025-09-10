@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Redirecting...</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 50px; 
+            background: #000; 
+            color: #fff; 
+            text-align: center;
+        }
+        .container { max-width: 600px; margin: 0 auto; }
+        .warning { color: #ff6b6b; margin: 20px 0; }
+        .success { color: #51cf66; margin: 20px 0; }
+        a { color: #fff; text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚨 Wrong URL Detected!</h1>
+        <div class="warning">
+            <p>You're accessing this page via <code>file://</code> which won't work with YouTube API.</p>
+            <p>Please use the HTTP server instead:</p>
+        </div>
+        
+        <div class="success">
+            <h2>✅ Correct URLs:</h2>
+            <p><a href="http://localhost:8000">🏠 Main Website: http://localhost:8000</a></p>
+            <p><a href="http://localhost:8000/test-api.html">🧪 Test Page: http://localhost:8000/test-api.html</a></p>
+        </div>
+        
+        <p>Make sure your Python server is running on port 8000!</p>
+    </div>
+    
+    <script>
+        // Auto-redirect after 3 seconds
+        setTimeout(() => {
+            window.location.href = 'http://localhost:8000';
+        }, 3000);
+    </script>
+</body>
+</html>
