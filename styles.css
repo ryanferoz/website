@@ -45,7 +45,7 @@ body {
 }
 
 .logo-img {
-    height: 50px;
+    height: 75px;
     width: auto;
     object-fit: contain;
 }
@@ -54,10 +54,12 @@ body {
     display: flex;
     list-style: none;
     gap: 2rem;
+    align-items: center;
 }
 
 .nav-link {
     color: #ffffff;
+    font-size: 1.2rem;
     text-decoration: none;
     font-weight: 500;
     transition: color 0.3s ease;
@@ -300,6 +302,11 @@ body {
     border-color: #ffffff;
 }
 
+.btn-secondary {
+    font-size: 1rem; 
+    margin-top: 0.5rem;
+    padding: 8px;
+}
 .btn-primary:hover {
     background-color: rgba(255, 255, 255, 1);
     transform: translateY(-2px);
@@ -523,7 +530,7 @@ section {
 }
 
 .about-logo {
-    width: 200px;
+    width: 400px;
     height: auto;
     object-fit: contain;
 }
@@ -532,7 +539,8 @@ section {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2rem;
+    padding: 0.1rem;
+    
 }
 
 /* About Section */
@@ -672,7 +680,7 @@ section {
 .contact-form {
     background-color: #111111;
     padding: 2rem;
-    border: 1px solid #333;
+    border: 0px solid #333;
 }
 
 .form-group {
